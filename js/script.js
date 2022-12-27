@@ -5,7 +5,7 @@ let showModalbtn = document.querySelector("#cart");
 let cancelbtn = document.querySelector(".cancel-img");
 let custom_modal = document.querySelector(".custom-modal");
 let buyBook = document.querySelector("#buy");
-
+let GLOBALID;
 function showModal() {
   modal.classList.toggle("active");
 }
@@ -65,7 +65,8 @@ function renderBooks(arr) {
 }
 
 function putCard(id) {
-  fetch(`${api}/books/${id}.json`, {
+  GLOBALID = id;
+  fetch(`${api}/books/${GLOBALID}.json`, {
     method: "GET",
   })
     .then((res) => {
@@ -73,36 +74,39 @@ function putCard(id) {
       return res.json();
     })
     .then((res) => {
-      let arr2 = Object.keys(res).map((item) => {
+      let arr3 = Object.keys(res).map((item) => {
         return {
           ...res[item],
           id: item,
         };
       });
-      putCardRender(arr2);
+
+      //  putCardRender(res);
+      console.log(arr3);
+      putCardRender(arr3);
     });
 }
 
-function putCardRender(arr) {
+function putCardRender(arr3) {
   let result = "";
-  arr.forEach((element) => {
+  arr3.forEach((element) => {
     result += `
-    <div class="card" style="width: 18rem">
-    <div class="bg-white p-3">
-      <div class="p-2 bg-light">
-        <img src="" class="p-3 card-img-top" alt="..." />
-      </div>
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">${element.id.title} </h5>
-      <p class="card-subtitle mb-2 text-muted">${element.author}</p>
-      <p class="card-subtitle mb-2 text-muted">${element.publisheryear}</p>
-      <div class="button-group d-flex gap-1 mb-1">
-      <span> ${element.price}</span>
-      </div>
+  <div class="card" style="width: 18rem">
+  <div class="bg-white p-3">
+    <div class="p-2 bg-light">
+      <img src="" class="p-3 card-img-top" alt="..." />
     </div>
   </div>
-  `;
+  <div class="card-bo dy">
+    <h5 class="card-title">${element.title} </h5>
+    <p class="card-subtitle mb-2 text-muted">${element.author}</p>
+    <p class="card-subtitle mb-2 text-muted">${element.publisheryear}</p>
+    <div class="button-group d-flex gap-1 mb-1">
+    <span> ${element.price}</span>
+    </div>
+  </div>
+</div>
+`;
   });
   console.log(result);
   custom_modal.innerHTML = result;
